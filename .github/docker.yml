@@ -1,0 +1,19 @@
+name: Revision Docker CI
+
+on:
+  push:
+    brances: ["main"]
+
+
+jobs: 
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+     - uses: actions/checkout@v4
+
+     - name: BUild Image
+       run:  docker build -t revision-app .
+
+     - name: Run Container
+       run: docker run revision-app  
