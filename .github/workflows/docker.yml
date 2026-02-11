@@ -1,19 +1,34 @@
-name: Revision Docker CI
+name: Multi Job CI
 
 on:
   push:
-    brances: ["main"]
+    branches: [ "main" ]
 
+jobs:s
 
-jobs: 
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-     - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-     - name: BUild Image
-       run:  docker build -t revision-app .
+      - name: Build Docker image
+        run: docker build -t revision-app .
 
-     - name: Run Container
-       run: docker run revision-app  
+  test:
+    runs-on: ubuntu-latest
+    needs: build   # 👈 this makes test wait for build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run container
+        run: docker run revision-app
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test   # 👈 deploy waits for test
+
+    steps:
+      - name: Fake deploy
+        run: echo "Deploying application 🚀"
